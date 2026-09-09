@@ -77,7 +77,7 @@ python asset_stats.py --root <ROOT> [--rank <RANK> --world_size <WORLD_SIZE>]
 ```bash
 python data_toolkit/dump_mesh.py ObjaverseXL --root datasets/ObjaverseXL_sketchfab
 python data_toolkit/dump_pbr.py ObjaverseXL --root datasets/ObjaverseXL_sketchfab
-python asset_stats.py --root datasets/ObjaverseXL_sketchfab
+python data_toolkit/asset_stats.py --root datasets/ObjaverseXL_sketchfab
 ```
 
 **Update Metadata:**
