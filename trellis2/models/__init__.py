@@ -46,6 +46,8 @@ def from_pretrained(path: str, **kwargs):
     """
     import os
     import json
+    import warnings
+    import torch
     from safetensors.torch import load_file
     is_local = os.path.exists(f"{path}.json") and os.path.exists(f"{path}.safetensors")
 
@@ -62,6 +64,14 @@ def from_pretrained(path: str, **kwargs):
 
     with open(config_file, 'r') as f:
         config = json.load(f)
+    if config['args'].get('dtype') in ('bf16', 'bfloat16') and torch.cuda.is_available():
+        if torch.cuda.get_device_capability()[0] < 8:
+            config['args']['dtype'] = 'float16'
+            warnings.warn(
+                "The current CUDA device is pre-Ampere; loading this BF16 checkpoint in float16. "
+                "FP16 may overflow and produce numerically unstable results.",
+                stacklevel=2,
+            )
     model = __getattr__(config['name'])(**config['args'], **kwargs)
     model.load_state_dict(load_file(model_file), strict=False)
 
